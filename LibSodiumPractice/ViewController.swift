@@ -15,16 +15,16 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        publickeyCryptography(message: "My Test Message")
-//        anonymousEncryption()
-//        imageEncryption()
+        publickeyCryptography(message: "My Test Message")
+        anonymousEncryption()
+        imageEncryption()
         fileEncryption()
     }
     
     func publickeyCryptography(message: String) {
         
-        let aliceKeyPair = sodium.box.keyPair()!
-        let bobKeyPair = sodium.box.keyPair()!
+        let senderKeyPair = sodium.box.keyPair()!
+        let receiverKeyPair = sodium.box.keyPair()!
         
         let message = message.bytes
         print("Original Message:\(message.utf8String!)")
@@ -32,16 +32,16 @@ class ViewController: UIViewController {
         let encryptedMessageFromAliceToBob: Bytes =
             sodium.box.seal(
                 message: message,
-                recipientPublicKey: bobKeyPair.publicKey,
-                senderSecretKey: aliceKeyPair.secretKey)!
+                recipientPublicKey: receiverKeyPair.publicKey,
+                senderSecretKey: senderKeyPair.secretKey)!
 
         print("Encrypted Message:\(encryptedMessageFromAliceToBob)")
 
         let messageVerifiedAndDecryptedByBob =
             sodium.box.open(
                 nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob,
-                senderPublicKey: aliceKeyPair.publicKey,
-                recipientSecretKey: bobKeyPair.secretKey)
+                senderPublicKey: senderKeyPair.publicKey,
+                recipientSecretKey: receiverKeyPair.secretKey)
 
         print("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.utf8String!)")
     }
@@ -61,14 +61,14 @@ class ViewController: UIViewController {
     }
     
     func keyExchange() {
-        let aliceKeyPair = sodium.keyExchange.keyPair()!
-        let bobKeyPair = sodium.keyExchange.keyPair()!
+        let senderKeyPair = sodium.keyExchange.keyPair()!
+        let receiverKeyPair = sodium.keyExchange.keyPair()!
 
-        let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey,
-            secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .CLIENT)!
+        let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: senderKeyPair.publicKey,
+            secretKey: senderKeyPair.secretKey, otherPublicKey: receiverKeyPair.publicKey, side: .CLIENT)!
         
-        let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey,
-            secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .SERVER)!
+        let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: receiverKeyPair.publicKey,
+            secretKey: receiverKeyPair.secretKey, otherPublicKey: senderKeyPair.publicKey, side: .SERVER)!
 
         let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessionKeyPairForBob.rx) // true
         let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx)
@@ -81,22 +81,22 @@ class ViewController: UIViewController {
             fatalError("Image not available")
         }
         
-        let aliceKeyPair = sodium.box.keyPair()!
-        let bobKeyPair = sodium.box.keyPair()!
+        let senderKeyPair = sodium.box.keyPair()!
+        let receiverKeyPair = sodium.box.keyPair()!
         
         let bytesImage = getArrayOfBytesFromImage(imageData: data as NSData)
         
         let encryptedMessageFromAliceToBob: Bytes =
             sodium.box.seal(
                 message: bytesImage,
-                recipientPublicKey: bobKeyPair.publicKey,
-                senderSecretKey: aliceKeyPair.secretKey)!
+                recipientPublicKey: receiverKeyPair.publicKey,
+                senderSecretKey: senderKeyPair.secretKey)!
 
         let messageVerifiedAndDecryptedByBob =
             sodium.box.open(
                 nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob,
-                senderPublicKey: aliceKeyPair.publicKey,
-                recipientSecretKey: bobKeyPair.secretKey)
+                senderPublicKey: senderKeyPair.publicKey,
+                recipientSecretKey: receiverKeyPair.secretKey)
         
         let bytesData = Data(messageVerifiedAndDecryptedByBob!)
         let responseImage = UIImage(data: bytesData)
@@ -111,22 +111,22 @@ class ViewController: UIViewController {
             fatalError("file not available")
         }
         
-        let aliceKeyPair = sodium.box.keyPair()!
-        let bobKeyPair = sodium.box.keyPair()!
+        let senderKeyPair = sodium.box.keyPair()!
+        let receiverKeyPair = sodium.box.keyPair()!
         
         let bytesImage = getArrayOfBytesFromImage(imageData: data as NSData)
         
         let encryptedMessageFromAliceToBob: Bytes =
             sodium.box.seal(
                 message: bytesImage,
-                recipientPublicKey: bobKeyPair.publicKey,
-                senderSecretKey: aliceKeyPair.secretKey)!
+                recipientPublicKey: receiverKeyPair.publicKey,
+                senderSecretKey: senderKeyPair.secretKey)!
 
         let messageVerifiedAndDecryptedByBob =
             sodium.box.open(
                 nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob,
-                senderPublicKey: aliceKeyPair.publicKey,
-                recipientSecretKey: bobKeyPair.secretKey)
+                senderPublicKey: senderKeyPair.publicKey,
+                recipientSecretKey: receiverKeyPair.secretKey)
         
         let bytesData = Data(messageVerifiedAndDecryptedByBob!)
 
