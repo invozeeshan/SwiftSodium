@@ -19,6 +19,7 @@
 		A8B479A02A1CCDFD00915276 /* LibSodiumPracticeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B4799F2A1CCDFD00915276 /* LibSodiumPracticeUITestsLaunchTests.swift */; };
 		A8B479AE2A1CD0F300915276 /* Sodium in Frameworks */ = {isa = PBXBuildFile; productRef = A8B479AD2A1CD0F300915276 /* Sodium */; };
 		A8B479B02A1DDBFB00915276 /* response.png in Resources */ = {isa = PBXBuildFile; fileRef = A8B479AF2A1DDBFA00915276 /* response.png */; };
+		A8FF1CD92A1E3942006710F4 /* response.png in Resources */ = {isa = PBXBuildFile; fileRef = A8B479AF2A1DDBFA00915276 /* response.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -257,6 +258,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8FF1CD92A1E3942006710F4 /* response.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
